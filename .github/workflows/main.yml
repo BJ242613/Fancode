@@ -1,31 +1,32 @@
-name: Create m3u file from URL
+name: Fetch and Create M3U File
 
 on:
   push:
     branches:
-      - main  # Trigger this workflow on push to the main branch
+      - main  # Change this to your main branch name if different
 
 jobs:
-  create-m3u:
+  fetch-and-create:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      
-    - name: Fetch m3u file from URL
-      run: |
-        wget -O Bjtech_fancode.m3u https://rattling-glazes.000webhostapp.com/Bjtech_fancode.m3u
-      
-    - name: Create m3u file
-      run: |
-        echo "File created from URL"  # Placeholder for any processing needed
-        
-    - name: Commit m3u file
-      run: |
-        git config --global user.email "actions@github.com"
-        git config --global user.name "GitHub Actions"
-        git add Bjtech_fancode.m3u
-        git commit -m "Automatically created m3u file"
-        git push
-        
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Fetch M3U file
+        run: |
+          curl -o fetched.m3u https://rattling-glazes.000webhostapp.com/Bjtech_fancode.m3u
+
+      - name: Create new M3U file
+        run: |
+          cat fetched.m3u > generated.m3u
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Auto-generated M3U file"
+          branch: main
+          author_name: GitHub Actions
+          author_email: actions@github.com
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
