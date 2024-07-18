@@ -1,0 +1,28 @@
+<?php 
+// Define the expected User-Agent string for access 
+$allowedUserAgent = 'Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0'; 
+ 
+// Check if the request has a User-Agent header 
+if (!isset($_SERVER['HTTP_USER_AGENT'])) { 
+    http_response_code(403); // If no User-Agent header, deny access 
+    exit('Access denied. No User-Agent header provided.'); 
+} 
+ 
+// Get the User-Agent from the request 
+$userAgent = $_SERVER['HTTP_USER_AGENT']; 
+ 
+// Check if the User-Agent matches the allowed one 
+if ($userAgent !== $allowedUserAgent) { 
+    http_response_code(403); // If User-Agent does not match, deny access 
+    exit('Access denied do not try acess protected content your IP Banned forever Now.'); 
+} 
+ 
+// If User-Agent matches, serve the m3u playlist file 
+$playlistUrl = 'https://bjtechknowledge-wc2023.blogspot.com/?m=0'; 
+ 
+// Set appropriate headers for m3u file 
+header('Content-Type: audio/mpegurl'); // This is the MIME type for m3u files 
+header('Content-Disposition: attachment; filename="index.m3u"'); 
+ 
+// Output the content of the m3u file 
+readfile($playlistUrl);
